@@ -1,7 +1,32 @@
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 export const exportToPdf = (analysis: AnalysisResult, dataset: Dataset) => {
-  // This is a placeholder - you'll need to implement actual PDF generation
-  console.log("Exporting to PDF:", analysis, dataset);
-  alert("PDF export functionality would be implemented here");
+  const doc = new jsPDF();
+  
+  // Title
+  doc.setFontSize(20);
+  doc.text('Data Analysis Report', 14, 22);
+  
+  // Summary section
+  doc.setFontSize(14);
+  doc.text('Summary Statistics', 14, 36);
+  
+  if (analysis.summaryStatistics) {
+    const summaryData = Object.entries(analysis.summaryStatistics).map(([key, value]) => [key, value]);
+    (doc as any).autoTable({
+      startY: 40,
+      head: [['Metric', 'Value']],
+      body: summaryData,
+      theme: 'grid',
+      headStyles: { fillColor: [41, 128, 185] }
+    });
+  }
+  
+  // Add more sections as needed
+  
+  // Save the PDF
+  doc.save('data_analysis_report.pdf');
 };
 
 export const exportToCsv = (analysis: AnalysisResult, dataset: Dataset) => {
